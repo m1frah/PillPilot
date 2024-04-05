@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/appointment.dart'; // Import the file where you have defined AppointmentListWidget
-import '../addappointment.dart'; // Import AddAppointmentPage
+import '../../widgets/appointment.dart'; // Import the file where you have defined AppointmentListWidget
+import '../../addappointment.dart'; // Import AddAppointmentPage
 
 class AppointmentPage extends StatelessWidget {
   @override

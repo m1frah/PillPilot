@@ -1,7 +1,7 @@
 // should probs create classes for adding meds, appointmetts later
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart' as sql;
-import 'package:sqflite/sqlite_api.dart';
+
 
 class SQLHelper{
   static Future<void> createTables(sql.Database database) async{
@@ -25,7 +25,7 @@ class SQLHelper{
         
   }
   static Future<sql.Database> db() async{
-    return sql.openDatabase('pills4.db', version:1, onCreate:(sql.Database database, int version) async{
+    return sql.openDatabase('pills5.db', version:1, onCreate:(sql.Database database, int version) async{
       await createTables(database);
     },);
 
@@ -73,8 +73,8 @@ static Future<List<Map<String, dynamic>>> getAppsForDay(String date) async {
 static Future<List<Map<String, dynamic>>> getMedicinesForDay(int dayOfWeek) async {
   final db = await SQLHelper.db();
   final medicines = await db.rawQuery(
-    'SELECT * FROM medicine WHERE (days & ?) > 0',
-    [1 << (dayOfWeek - 1)],
+    'SELECT * FROM medicine WHERE SUBSTR(days, ?, 1) = "1"',
+    [(dayOfWeek)],
   );
   print('Medicines for day: $medicines');
   return medicines;

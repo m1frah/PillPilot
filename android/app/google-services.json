@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "976623174181",
+    "project_id": "pillpilot10",
+    "storage_bucket": "pillpilot10.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:976623174181:android:74764b0799df96b1d2b5cc",
+        "android_client_info": {
+          "package_name": "com.pillpilot10.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9ypCejWFhwhCycxuJKy5vdHEt6BopxSY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

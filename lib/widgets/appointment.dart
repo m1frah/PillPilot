@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pillapp/database/sql_helper.dart'; // Import your SQL helper file
-import '/screens/editappointments.dart'; // Import your edit appointment page
+import 'package:pillapp/database/sql_helper.dart'; 
+import '../screens/appointments/editappointments.dart';
 
 class AppointmentListWidget extends StatefulWidget {
   @override
@@ -26,18 +26,18 @@ class _AppointmentListWidgetState extends State<AppointmentListWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16), // Add horizontal padding
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: ListView.builder(
         itemCount: _appointments.length,
         itemBuilder: (context, index) {
           final appointment = _appointments[index];
           return Padding(
-            padding: EdgeInsets.symmetric(vertical: 10), // Increase vertical padding between items
+            padding: EdgeInsets.symmetric(vertical: 10), 
             child: Card(
-              elevation: 4, // Add shadow effect
+              elevation: 4,
               child: GestureDetector(
                 onTap: () {
-                  // Navigate to edit appointment page when appointment item is clicked
+             
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -46,22 +46,22 @@ class _AppointmentListWidgetState extends State<AppointmentListWidget> {
                   );
                 },
                 child: ListTile(
-                  contentPadding: EdgeInsets.all(16), // Increase content padding
-                  leading: Icon(Icons.event), // You can change the icon as needed
+                  contentPadding: EdgeInsets.all(16), 
+                  leading: Icon(Icons.event),
                   title: Text(
                     appointment['title'],
-                    style: TextStyle(fontSize: 18), // Increase font size of title
+                    style: TextStyle(fontSize: 18),
                   ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Location: ${appointment['location']}',
-                        style: TextStyle(fontSize: 16), // Increase font size of subtitle
+                        style: TextStyle(fontSize: 16), 
                       ),
                       Text(
                         'Date and Time: ${appointment['dateTime']}',
-                        style: TextStyle(fontSize: 16), // Increase font size of subtitle
+                        style: TextStyle(fontSize: 16), 
                       ),
                       
                     ],

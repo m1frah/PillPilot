@@ -36,9 +36,9 @@ class _AddMedicinePage2State extends State<AddMedicinePage2> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
-            // Add a time picker widget
+
             ElevatedButton(
-              onPressed: () {
+              onPressed: () { //maybe change the time picker to better design
                 _showTimePicker();
               },
               child: Text('Select Time'),
@@ -49,7 +49,7 @@ class _AddMedicinePage2State extends State<AddMedicinePage2> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
-            // Add checkboxes for selecting days
+        
             for (int i = 0; i < 7; i++)
               CheckboxListTile(
                 title: Text(_getDayName(i)),
@@ -63,9 +63,9 @@ class _AddMedicinePage2State extends State<AddMedicinePage2> {
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () async {
-                // Save details to database
+          
                 await _saveDetails();
-                // Navigate back to previous page
+        
                 Navigator.pop(context);
               },
               child: Text('Save'),
@@ -110,7 +110,7 @@ class _AddMedicinePage2State extends State<AddMedicinePage2> {
   }
 
 Future<void> _saveDetails() async {
-  // Construct days bitmask
+
 String days = '';
 for (int i = 6; i >= 0; i--) {
   if (_selectedDays[i]) {
@@ -119,9 +119,8 @@ for (int i = 6; i >= 0; i--) {
     days += '0';
   }
 }
+print("days is $days");
 
-
-    // Call method to save details to database
     await SQLHelper.createMed(widget.selectedType,
       widget.name,
       widget.reason,

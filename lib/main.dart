@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
-import 'screens/home.dart'; // Import your home page
+import 'package:firebase_core/firebase_core.dart';
+import 'screens/signup.dart';
 
-void main() {
+
+import 'firebase_options.dart';
+
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Your App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MainScreen(), // Redirect to MainScreen
+      home: SignUpPage(),
     );
-  }
-}
-
-class MainScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // Redirect to your home page
-    return HomePage();
-  }
-}
+  }}

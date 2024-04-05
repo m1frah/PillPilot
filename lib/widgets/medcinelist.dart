@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pillapp/database/sql_helper.dart'; // Import your SQL helper file
-import '../screens/editmeds.dart';
+import 'package:pillapp/database/sql_helper.dart'; 
+import '../screens/medcine/editmeds.dart';
+
 class MedicationListWidget extends StatefulWidget {
   @override
   _MedicationListWidgetState createState() => _MedicationListWidgetState();
@@ -22,51 +23,6 @@ class _MedicationListWidgetState extends State<MedicationListWidget> {
     });
   }
 
-@override
-Widget build(BuildContext context) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: ListView.builder(
-      itemCount: _medications.length,
-      itemBuilder: (context, index) {
-        final medication = _medications[index];
-        return Padding(
-          padding: EdgeInsets.symmetric(vertical: 10),
-          child: GestureDetector(
-            onTap: () {
-              // Navigate to the edit medications page passing the medication data
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditMedsPage(medication: medication),
-                ),
-              );
-            },
-            child: Card(
-              elevation: 4,
-              child: ListTile(
-                contentPadding: EdgeInsets.all(16),
-                leading: _buildIcon(medication['type']),
-                title: Text(
-                  medication['name'],
-                  style: TextStyle(fontSize: 18),
-                ),
-                subtitle: Text(
-                  medication['reason'],
-                  style: TextStyle(fontSize: 16),
-                ),
-                trailing: Text(
-                  medication['time'], // Display the time here
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    ),
-  );
-}
   Widget _buildIcon(String type) {
     String imagePath;
     switch (type.toLowerCase()) {
@@ -88,4 +44,97 @@ Widget build(BuildContext context) {
       height: 40,
     );
   }
-}
+
+  Widget _buildDaysHighlight(String days) {
+
+    List<String> dayAbbreviations = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(
+        days.length,
+        (index) {
+  
+          if (days[index] == '1') {
+            return Padding(
+              padding: EdgeInsets.only(left: 2),
+              child: Text(
+                dayAbbreviations[index],
+                style: TextStyle(
+                  fontSize: 11,
+                  color: Color.fromARGB(151, 196, 12, 12), // Highlight in red
+                ),
+              ),
+            );
+          } else {
+            return Padding(
+              padding: EdgeInsets.only(left: 2),
+              child: Text(
+                dayAbbreviations[index],
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.grey, // Inactive days in gray
+                ),
+              ),
+            );
+          }
+        },  
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ListView.builder(
+        itemCount: _medications.length,
+        itemBuilder: (context, index) {
+          final medication = _medications[index];
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: GestureDetector(
+              onTap: () {
+       
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditMedsPage(medication: medication),
+                  ),
+                );
+              },
+              child: Card(
+                elevation: 4,
+                child: ListTile(
+  contentPadding: EdgeInsets.all(16),
+  leading: _buildIcon(medication['type']),
+  title: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(
+        medication['name'],
+        style: TextStyle(fontSize: 18),
+      ),
+      Text(
+        medication['time'], 
+        style: TextStyle(fontSize: 16, color: Color.fromARGB(143, 0, 0, 0)),
+      ),
+    ],
+  ),
+  subtitle: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        medication['reason'],
+        style: TextStyle(fontSize: 16),
+      ),
+      _buildDaysHighlight(medication['days']),
+    ],
+  ),
+),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }}

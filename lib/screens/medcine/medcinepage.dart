@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/medcinelist.dart'; // Import the file where you have defined MedicationListWidget
-import 'addmeds.dart'; // Import AddMedsPage
-
+import '../../widgets/medcinelist.dart';
+import 'addmeds.dart';
 class MedicationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -9,10 +8,10 @@ class MedicationPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Medication List'),
       ),
-      body: MedicationListWidget(), // Place MedicationListWidget here
+      body: MedicationListWidget(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigate to AddMedsPage when FloatingActionButton is pressed
+   
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => AddMedicinePage()),
