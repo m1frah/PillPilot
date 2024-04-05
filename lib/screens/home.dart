@@ -176,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                  onTap: () {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => NotificationTestPage()), 
+    MaterialPageRoute(builder: (context) => SyncPage()), 
   );
 },
      

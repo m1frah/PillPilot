@@ -40,37 +40,43 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
     }
   }
 
-  // Method to add friend
- void _addFriend() async {
-  try {
-    // Check if the entered fcode is the same as the current user's fcode
+void _addFriend() async {
+  try {//ensure u cant add ureslf as friend
     if (_friendFcode == _currentUserFcode) {
-      // Show a snackbar indicating that the user cannot add themselves as a friend
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('You cannot add yourself as a friend'),
           duration: Duration(seconds: 2),
         ),
       );
-      return; // Exit the method
+      return;
     }
 
-    // Query Firestore to find the user with the entered fcode
+
     QuerySnapshot<Map<String, dynamic>> usersSnapshot = await _firestore
         .collection('users')
         .where('fcode', isEqualTo: _friendFcode)
         .get();
 
-
     if (usersSnapshot.docs.isNotEmpty) {
- 
       String friendUserId = usersSnapshot.docs.first.id;
 
+      // Add friend to current user's friends list
+      await _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .collection('friends')
+          .doc(friendUserId)
+          .set({'fcode': _friendFcode});
 
-      await _firestore.collection('users').doc(_auth.currentUser!.uid).collection('friends').doc(friendUserId).set({
-        'fcode': _friendFcode,
-      });
-
+      // Add current user to friend's friends list
+      await _firestore
+          .collection('users')
+          .doc(friendUserId)
+          .collection('friends')
+          .doc(_auth.currentUser!.uid)
+          .set({'fcode': _currentUserFcode});
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -79,7 +85,6 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
         ),
       );
     } else {
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('No user found with the entered fcode'),
@@ -91,6 +96,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
     print('Error adding friend: $error');
   }
 }
+
 
   @override
   Widget build(BuildContext context) {
