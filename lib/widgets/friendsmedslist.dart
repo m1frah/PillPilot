@@ -29,7 +29,7 @@ class FirebaseMedicationListWidget extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 10),
               child: GestureDetector(
                 onTap: () {
-                  // Add navigation to edit medication page here if needed
+         
                 },
                 child: Card(
                   elevation: 4,

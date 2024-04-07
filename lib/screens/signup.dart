@@ -1,9 +1,10 @@
-  import 'package:flutter/material.dart';
-  import 'package:firebase_auth/firebase_auth.dart';
-  import 'package:cloud_firestore/cloud_firestore.dart';
-  import 'home.dart';
-  import 'login.dart'; 
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'home.dart';
+import 'login.dart'; 
 import 'dart:math';
+
 class SignUpPage extends StatefulWidget {
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -17,14 +18,14 @@ class _SignUpPageState extends State<SignUpPage> {
   String _email = '';
   String _password = '';
   String _username = '';
-  String _gender = '';
+  String? _gender;
 
   void _submitForm() async {
+     String pfp = _gender == 'Male' ? 'm1.png' : 'f2.png'; // Set profile picture based on gender
     String fcode = await generateFcode();
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       try {
-
         await _auth.createUserWithEmailAndPassword(
           email: _email,
           password: _password,
@@ -34,6 +35,7 @@ class _SignUpPageState extends State<SignUpPage> {
             'email': _email,
             'gender': _gender,
             'fcode': fcode,
+            'pfp':pfp,
           });
 
           Navigator.pushReplacement(
@@ -42,7 +44,6 @@ class _SignUpPageState extends State<SignUpPage> {
           );
         });
       } catch (error) {
-
         print('Error: $error');
       }
     }
@@ -118,17 +119,26 @@ class _SignUpPageState extends State<SignUpPage> {
                   _password = value!;
                 },
               ),
-              TextFormField(
+              DropdownButtonFormField<String>(
                 decoration: InputDecoration(labelText: 'Gender'),
-                validator: (value) {
+               validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your gender';
+                    return 'Please enter your Gender';
                   }
                   return null;
                 },
-                onSaved: (value) {
-                  _gender = value!;
+                items: ['Male', 'Female']
+                    .map((gender) => DropdownMenuItem<String>(
+                          value: gender,
+                          child: Text(gender),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _gender = value;
+                  });
                 },
+                value: _gender,
               ),
               SizedBox(height: 20),
               ElevatedButton(
@@ -138,11 +148,10 @@ class _SignUpPageState extends State<SignUpPage> {
               SizedBox(height: 10), 
               TextButton(
                 onPressed: () {
- 
-                Navigator.pushReplacement(
-  context,
-  MaterialPageRoute(builder: (context) => LoginPage()),
-);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
                 },
                 child: Text('Already have an account? Login'),
               ),

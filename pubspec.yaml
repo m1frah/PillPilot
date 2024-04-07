@@ -72,7 +72,14 @@ flutter:
       - assets/pill.png
       - assets/syrup.png
       - assets/syringe.png
-      - assets/boy.png
+      - assets/m1.png
+      - assets/m2.png
+      - assets/m3.png
+      - assets/m4.png
+      - assets/f1.png
+      - assets/f2.png
+      - assets/f3.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

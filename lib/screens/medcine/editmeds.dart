@@ -18,7 +18,7 @@ class _EditMedsPageState extends State<EditMedsPage> {
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with existing medication data
+   
     _nameController = TextEditingController(text: widget.medication['name']);
     _reasonController = TextEditingController(text: widget.medication['reason']);
     _daysController = TextEditingController(text: widget.medication['days']);
@@ -27,7 +27,7 @@ class _EditMedsPageState extends State<EditMedsPage> {
 
   @override
   void dispose() {
-    // Dispose controllers
+
     _nameController.dispose();
     _reasonController.dispose();
     _daysController.dispose();
@@ -36,7 +36,7 @@ class _EditMedsPageState extends State<EditMedsPage> {
   }
 
   Future<void> _saveChanges() async {
-    // Update medication data in the database
+ 
     await SQLHelper.updateMed(
       widget.medication['id'],
       widget.medication['type'],
@@ -45,14 +45,14 @@ class _EditMedsPageState extends State<EditMedsPage> {
       _daysController.text,
       _timeController.text,
     );
-    // Navigate back to previous screen
+
     Navigator.pop(context);
   }
 
   Future<void> _deleteMedication() async {
     try {
       await SQLHelper.deleteMed(widget.medication['id']);
-      Navigator.pop(context); // Navigate back after deletion
+      Navigator.pop(context); 
     } catch (err) {
       debugPrint("Error deleting medication: $err");
     }

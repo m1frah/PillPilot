@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../widgets/appointment.dart'; // Import the file where you have defined AppointmentListWidget
-import '../../addappointment.dart'; // Import AddAppointmentPage
+import '../../widgets/appointment.dart';
+import '../../addappointment.dart'; 
 
 class AppointmentPage extends StatelessWidget {
   @override
@@ -9,10 +9,10 @@ class AppointmentPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Appointment List'),
       ),
-      body: AppointmentListWidget(), // Place AppointmentListWidget here
+      body: AppointmentListWidget(), 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigate to AddAppointmentPage when FloatingActionButton is pressed
+
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => AddAppointmentPage()),

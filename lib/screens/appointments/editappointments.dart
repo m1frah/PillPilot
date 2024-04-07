@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pillapp/database/sql_helper.dart'; // Import your SQL helper file
+import 'package:pillapp/database/sql_helper.dart';
 
 class EditAppointmentPage extends StatefulWidget {
   final Map<String, dynamic> appointment;
@@ -18,7 +18,7 @@ class _EditAppointmentPageState extends State<EditAppointmentPage> {
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with existing appointment data
+  
     _titleController = TextEditingController(text: widget.appointment['title']);
     _locationController = TextEditingController(text: widget.appointment['location']);
     _dateTimeController = TextEditingController(text: widget.appointment['dateTime']);
@@ -26,7 +26,7 @@ class _EditAppointmentPageState extends State<EditAppointmentPage> {
 
   @override
   void dispose() {
-    // Dispose controllers
+
     _titleController.dispose();
     _locationController.dispose();
     _dateTimeController.dispose();
@@ -34,21 +34,21 @@ class _EditAppointmentPageState extends State<EditAppointmentPage> {
   }
 
   Future<void> _saveChanges() async {
-    // Update appointment data in the database
+
     await SQLHelper.updateApp(
       widget.appointment['id'],
       _titleController.text,
       _locationController.text,
       _dateTimeController.text,
     );
-    // Navigate back to previous screen
+
     Navigator.pop(context);
   }
 
   Future<void> _deleteAppointment() async {
     try {
       await SQLHelper.deleteApp(widget.appointment['id']);
-      Navigator.pop(context); // Navigate back after deletion
+      Navigator.pop(context);
     } catch (err) {
       debugPrint("Error deleting appointment: $err");
     }

@@ -33,7 +33,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
           ),
         );
 
-        // Clear text fields after adding appointment
+      
         _titleController.clear();
         _locationController.clear();
         setState(() {
@@ -49,7 +49,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
         );
       }
     } else {
-      // No date and time selected
+   
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please select date and time'),

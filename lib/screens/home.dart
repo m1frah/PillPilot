@@ -172,7 +172,7 @@ class _HomePageState extends State<HomePage> {
 },
             ),
             ListTile(
-              title: Text('notification test'),
+              title: Text('sync test'),
                  onTap: () {
   Navigator.push(
     context,
@@ -181,8 +181,18 @@ class _HomePageState extends State<HomePage> {
 },
      
             ),
+              ListTile(
+              title: Text('notification test'),
+                 onTap: () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => NotificationTestPage()), 
+  );
+},
+     
+            ),
             ListTile(
-              title: Text('Documents'),
+              title: Text('Journal'),
               onTap: () {
            
               },

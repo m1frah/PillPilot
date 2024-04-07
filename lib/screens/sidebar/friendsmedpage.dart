@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'addfriends.dart';
-import '../../database/firebaseoperations.dart';
 
-import 'package:flutter/material.dart';
-import '../../widgets/friendsmedslist.dart'; 
+
+import '../../widgets/friendsmedslist.dart';
+
 class FriendsMedsPage extends StatelessWidget {
   final String friendUserId;
 

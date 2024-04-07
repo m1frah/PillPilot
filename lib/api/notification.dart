@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -23,9 +22,9 @@ class NotificationManager {
         tz.TZDateTime.from(scheduledDate, tz.local);
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-  'Scheduled Notification',
+  'pillnotify',
   'Shows a scheduled notification',
-  channelDescription: 'Channel Description', // Specify the name for the channelDescription argument
+  channelDescription: 'Channel Description', 
   icon: '@mipmap/ic_launcher',
     );
     final NotificationDetails platformChannelSpecifics =

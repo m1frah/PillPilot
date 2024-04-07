@@ -79,7 +79,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
       )),
     );
   },
-  child: Text('Next'),
+  child: const Text('Next'),
 ),
           ],
         ),
