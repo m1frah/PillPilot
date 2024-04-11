@@ -42,15 +42,17 @@ print("PARSED DATE $createDateParsed");
       child: GestureDetector(
         onTap: () {
          
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => EditJournalPage(
-
-                initialJournalEntry: widget.journalEntry,
-              ),
-            ),
-          );
+  Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => EditJournalPage(
+      initialJournalEntry: widget.journalEntry,
+    ),
+  ),
+).then((_) {
+  // Refresh the page when navigation back
+  setState(() {});
+});
         },
         child: Card(
           elevation: 3,

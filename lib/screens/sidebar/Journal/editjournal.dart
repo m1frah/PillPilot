@@ -210,7 +210,7 @@
           updatedEntry,
         );
 
-        Navigator.of(context).pop();
+        Navigator.pop(context);
       }
 
       void _deleteJournal() async {
@@ -218,6 +218,6 @@
         await SQLHelper.deleteJournal(widget.initialJournalEntry.id,);
      
 
-        Navigator.of(context).pop();
+         Navigator.pop(context);
 
     }}
