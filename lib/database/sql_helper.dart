@@ -1,8 +1,8 @@
 // should probs create classes for adding meds, appointmetts later
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart' as sql;
-
-
+import '../api/localnotifications.dart'; 
+import '../model/model.dart';
 class SQLHelper{
   static Future<void> createTables(sql.Database database) async{
   await database.execute('''
@@ -22,30 +22,53 @@ class SQLHelper{
         dateTime TEXT
       )
     ''');
+  
+  await database.execute('''
+      CREATE TABLE IF NOT EXISTS journal(
+        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        title TEXT,
+        content TEXT,
+        createDate TEXT,
+        mood TEXT
+        )
+    ''');
         
   }
   static Future<sql.Database> db() async{
-    return sql.openDatabase('pills5.db', version:1, onCreate:(sql.Database database, int version) async{
+    return sql.openDatabase('pillsV2.db', version:1, onCreate:(sql.Database database, int version) async{
       await createTables(database);
     },);
 
   } 
 //add medcs
-  static Future<int> createMed(String type, String name, String reason,String days, String time) async  {
-    final db = await SQLHelper.db();
-    final data ={'type':type,'name':name,'reason':reason,'days': days,'time': time};
-    final id = await  db.insert('medicine',data ,conflictAlgorithm: sql.ConflictAlgorithm.replace);
-    return id;
+static Future<int> createMed(String type, String name, String reason, String days, String time) async {
+  final db = await SQLHelper.db();
+  final data = {'type': type, 'name': name, 'reason': reason, 'days': days, 'time': time};
+  final  id = await db.insert('medicine', data, conflictAlgorithm: sql.ConflictAlgorithm.replace);
 
-  }
+  // Call scheduleNotifications to schedule notifications for the new medicine
+  await LocalNotifications.scheduleNotifications(id, days, time, name);
+
+  return id;
+}
   //add appointments
-  static Future<int> createApp(String title, String location, String dateTime) async  {
-    final db = await SQLHelper.db();
-    final data ={'title':title,'location':location,'dateTime':dateTime};
-    final id = await  db.insert('appointment',data ,conflictAlgorithm: sql.ConflictAlgorithm.replace);
-    return id;
+ static Future<int> createApp(String title, String location, String dateTime) async {
+  final db = await SQLHelper.db();
+  final data = {'title': title, 'location': location, 'dateTime': dateTime};
+  final id = await db.insert('appointment', data, conflictAlgorithm: sql.ConflictAlgorithm.replace);
 
-  }
+  // Parse dateTime to a DateTime object
+  DateTime appointmentDateTime = DateTime.parse(dateTime);
+
+  // Schedule notification
+  await LocalNotifications.showScheduleNotification(
+    title: 'Appointment Reminder: $title',
+    body: 'You have an appointment at $location at ${appointmentDateTime.hour}:${appointmentDateTime.minute}',
+    payload: id.toString(), // Associating appointment id with notification id
+  );
+
+  return id;
+}
 //gets al meds
   static Future<List<Map<String, dynamic>>> getMeds() async{
     final db =await SQLHelper.db();
@@ -120,4 +143,46 @@ try{
  debugPrint("something went wrong: $err");
 }
     }
+
+
+    //Journal related sql
+  //create journal
+// Insert a journal entry into the database
+
+static Future<int> insertJournal(JournalEntry entry) async {
+  final db = await SQLHelper.db();
+  final data = {'title': entry.title, 'createDate': entry.createDate, 'mood': entry.mood, 'content': entry.content};
+  final id = await db.insert('journal', data, conflictAlgorithm: sql.ConflictAlgorithm.replace);
+
+  return id;
+}
+// Update a journal entry in the database
+
+static Future<int> updateJournal(JournalEntry entry) async{
+    final db =await SQLHelper.db();
+final data ={'title': entry.title,  'mood': entry.mood, 'content': entry.content};;
+  final result = await db.update('journal', data, where: "id = ?", whereArgs: [entry.id]);
+  return result;
+
+    }
+// Fetch all journal entries from the database
+
+
+  // Delete a journal
+ static Future<List<Map<String, dynamic>>> getJournals() async{
+    final db =await SQLHelper.db();
+    return db.query('journal', orderBy: "id");
+
   }
+  
+  //get all jounals
+static Future<void> deleteJournal(int id) async{
+    final db =await SQLHelper.db();
+try{
+      await db.delete('journal',where: "id = ?", whereArgs: [id]);
+ }catch(err){
+ debugPrint("something went wrong: $err");
+}
+    }
+}
+  

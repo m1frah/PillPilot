@@ -43,16 +43,22 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          
-          margin: EdgeInsets.all(10),
-          
-          child: TableCalendar(
+
+ @override
+Widget build(BuildContext context) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      SizedBox(height: 20), 
+      Container(
+        margin: EdgeInsets.all(0),
+        child: TableCalendar(
+               daysOfWeekStyle: DaysOfWeekStyle(
+              
+              weekdayStyle: TextStyle(color: Colors.black),
+              weekendStyle: TextStyle(color: Color.fromARGB(255, 117, 86, 255)),
+              
+            ),
             firstDay: DateTime.utc(2021, 1, 1),
             lastDay: DateTime.utc(2030, 12, 31),
             focusedDay: _focusedDay,
@@ -75,20 +81,18 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             },
             headerStyle: HeaderStyle(
               titleCentered: true,
-              formatButtonVisible: false,
+              formatButtonVisible: false, headerMargin: EdgeInsets.only(bottom: 10),
+              
             ),
+            
             calendarStyle: CalendarStyle(
-              outsideDaysVisible: false,
+              outsideDaysVisible: true,
               todayDecoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.5),
+                color: Color.fromARGB(255, 144, 129, 255).withOpacity(0.5),
                 shape: BoxShape.circle,
               ),
             ),
-            daysOfWeekStyle: DaysOfWeekStyle(
-              weekdayStyle: TextStyle(color: Colors.black),
-              weekendStyle: TextStyle(color: Color.fromARGB(255, 117, 86, 255)),
-              
-            ),
+         
           ),
           
         ),
@@ -97,12 +101,12 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           child: Text(
             '${DateFormat.yMMMMd('en_US').format(_selectedDay)}',
             style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              fontWeight: FontWeight.w400,
             ),
           ),
         ),
-        SizedBox(height: 16),
+        SizedBox(height: 10),
         Expanded(
           child: Container(
             decoration: BoxDecoration(

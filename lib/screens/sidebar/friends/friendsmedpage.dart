@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 
-import '../../widgets/friendsmedslist.dart';
+import '../../../widgets/friendsmedicineList.dart';
 
 class FriendsMedsPage extends StatelessWidget {
   final String friendUserId;

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'medcine/medcinepage.dart';
+import 'medcine/medicinepage.dart';
 import 'appointments/appointments.dart';
 import 'community/community.dart';
 import '../widgets/calender.dart';
 import 'signup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'sidebar/editprofile.dart';
-import 'sidebar/friends.dart';
+import 'sidebar/friends/friends.dart';
 import 'sidebar/sync.dart';
 import 'test.dart';
+import 'sidebar/Journal/journal.dart';
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -80,7 +81,7 @@ class _HomePageState extends State<HomePage> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 255, 255, 255), 
-                  // Add drop shadow
+         
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5),
@@ -146,80 +147,112 @@ class _HomePageState extends State<HomePage> {
         onTap: _onItemTapped,
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 163, 123, 255),
-              ),
-              child: Text(
-                'Pill Pilot',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  
-                ),
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 163, 123, 255),
+            ),
+            child: Text(
+              'Pill Pilot',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 30,
               ),
             ),
-            ListTile(
-              title: Text('Edit Profile'),
-             onTap: () {
-           Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => EditProfilePage()), 
-  );
-},
+          ),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text(
+              'Edit Profile',
+              style: TextStyle(
+                fontSize: 18,
+              ),
             ),
-            ListTile(
-              title: Text('sync test'),
-                 onTap: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => SyncPage()), 
-  );
-},
-     
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EditProfilePage()), 
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.sync),
+            title: Text(
+              'Sync Data',
+              style: TextStyle(
+                fontSize: 18,
+              ),
             ),
-              ListTile(
-              title: Text('notification test'),
-                 onTap: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => NotificationTestPage()), 
-  );
-},
-     
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SyncPage()), 
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.notifications),
+            title: Text(
+              'Notification Test',
+              style: TextStyle(
+                fontSize: 18,
+              ),
             ),
-            ListTile(
-              title: Text('Journal'),
-              onTap: () {
-           
-              },
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TestPage()), 
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.book),
+            title: Text(
+              'Journal',
+              style: TextStyle(
+                fontSize: 18,
+              ),
             ),
-            ListTile(
-              title: Text('Friends'),
-                           onTap: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => FriendsPage()), 
-  );
-},
+           onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => JournalPage()), 
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.people),
+            title: Text(
+              'Friends',
+              style: TextStyle(
+                fontSize: 18,
+              ),
             ),
-              ListTile(
-        leading: Icon(
-          Icons.logout,
-           color: Colors.red,
-        ),
-        title: Text(
-          'Log Out',
-          style: TextStyle(color: Colors.red), 
-        ),
-        onTap: _signOut
-      ),
-          ],
-        ),
-      ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FriendsPage()), 
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.logout,
+              color: Colors.red,
+            ),
+            title: Text(
+              'Log Out',
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 18,
+              ), 
+            ),
+            onTap: _signOut,
+          ),
+        ],
+       ) ),
     );
   }
 }

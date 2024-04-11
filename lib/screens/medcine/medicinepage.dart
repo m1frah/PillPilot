@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../widgets/medcinelist.dart';
+import '../../widgets/medicineList.dart';
 import 'addmeds.dart';
 class MedicationPage extends StatelessWidget {
   @override
@@ -14,7 +14,7 @@ class MedicationPage extends StatelessWidget {
    
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddMedicinePage()),
+            MaterialPageRoute(builder: (context) => AddMedicinePage())
           );
         },
         tooltip: 'Add Medicine',

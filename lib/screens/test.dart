@@ -1,43 +1,66 @@
 import 'package:flutter/material.dart';
-import '../api/notification.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'dart:convert'; // For JSON encoding and decoding
 
-class NotificationTestPage extends StatelessWidget {
+class TestPage extends StatefulWidget {
+  @override
+  _TestPageState createState() => _TestPageState();
+}
+
+class _TestPageState extends State<TestPage> {
+  // Initialize the plugin
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the notification plugin
+    initializeNotifications();
+  }
+
+  // Initialize notifications
+  Future<void> initializeNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  // Print scheduled notifications
+ // Print scheduled notifications
+Future<void> printScheduledNotifications() async {
+  final List<PendingNotificationRequest> pendingNotifications =
+      await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+
+  print('List of scheduled notifications:');
+  for (final notification in pendingNotifications) {
+    print('Notification ID: ${notification.id}');
+    print('Notification Title: ${notification.title}');
+    print('Notification Body: ${notification.body}');
+    final Map<String, dynamic> payloadData = json.decode(notification.payload!);
+    final int medicineId = payloadData['medicineId'];
+    print('Medicine ID: $medicineId');
+    final String? title = notification.title;
+    
+    print('----------------------');
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notification Test Page'),
+        title: Text('Notification Test'),
       ),
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            _scheduleNotification();
+            printScheduledNotifications();
           },
-          child: Text('Schedule Notification'),
+          child: Text('Print Scheduled Notifications'),
         ),
       ),
     );
-  }
-
-  void _scheduleNotification() {
-    // Define the title and body of the notification
-    String title = 'Test Notification';
-    String body = 'This is a scheduled notification test.';
-
-    // Get the current date and time
-    DateTime now = DateTime.now();
-
-    // Schedule the notification 5 seconds from now
-    DateTime scheduledDate = now.add(Duration(seconds: 5));
-
-    // Call the showScheduledNotification method from your NotificationManager
-    NotificationManager.showScheduledNotification(
-      title: title,
-      body: body,
-      scheduledDate: scheduledDate,
-    );
-
-    
- 
   }
 }

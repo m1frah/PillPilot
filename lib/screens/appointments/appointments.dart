@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../widgets/appointment.dart';
-import '../../addappointment.dart'; 
+import '../../widgets/appointmenList.dart';
+import 'addappointment.dart'; 
 
 class AppointmentPage extends StatelessWidget {
   @override
@@ -23,4 +23,4 @@ class AppointmentPage extends StatelessWidget {
       ),
     );
   }
-}
+}   

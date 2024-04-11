@@ -16,6 +16,7 @@ class _MedicationListWidgetState extends State<MedicationListWidget> {
     _fetchMedications();
   }
 
+
   Future<void> _fetchMedications() async {
     List<Map<String, dynamic>> medications = await SQLHelper.getMeds();
     setState(() {
@@ -100,7 +101,12 @@ class _MedicationListWidgetState extends State<MedicationListWidget> {
                   MaterialPageRoute(
                     builder: (context) => EditMedsPage(medication: medication),
                   ),
-                );
+              ).then((value) {
+  if (value == true) {
+   
+    _fetchMedications();
+  }
+});
               },
               child: Card(
                 elevation: 4,

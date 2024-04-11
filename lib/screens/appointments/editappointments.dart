@@ -18,7 +18,7 @@ class _EditAppointmentPageState extends State<EditAppointmentPage> {
   @override
   void initState() {
     super.initState();
-  
+
     _titleController = TextEditingController(text: widget.appointment['title']);
     _locationController = TextEditingController(text: widget.appointment['location']);
     _dateTimeController = TextEditingController(text: widget.appointment['dateTime']);
@@ -26,7 +26,6 @@ class _EditAppointmentPageState extends State<EditAppointmentPage> {
 
   @override
   void dispose() {
-
     _titleController.dispose();
     _locationController.dispose();
     _dateTimeController.dispose();
@@ -34,7 +33,6 @@ class _EditAppointmentPageState extends State<EditAppointmentPage> {
   }
 
   Future<void> _saveChanges() async {
-
     await SQLHelper.updateApp(
       widget.appointment['id'],
       _titleController.text,
@@ -87,7 +85,10 @@ class _EditAppointmentPageState extends State<EditAppointmentPage> {
                     backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
                   ),
                   icon: Icon(Icons.delete, color: Colors.white),
-                  label: Text('Delete'),
+                  label: Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: _saveChanges,

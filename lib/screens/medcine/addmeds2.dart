@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pillapp/database/sql_helper.dart';
 import 'addmeds.dart';
+import 'medicinepage.dart';
 
-class AddMedicinePage2 extends StatefulWidget { final String selectedType;
+class AddMedicinePage2 extends StatefulWidget {
+  final String selectedType;
   final String name;
   final String reason;
 
@@ -11,12 +13,12 @@ class AddMedicinePage2 extends StatefulWidget { final String selectedType;
     required this.name,
     required this.reason,
   });
+
   @override
   _AddMedicinePage2State createState() => _AddMedicinePage2State();
 }
 
 class _AddMedicinePage2State extends State<AddMedicinePage2> {
-  
   String _selectedTime = '';
   List<bool> _selectedDays = [false, false, false, false, false, false, false];
 
@@ -26,51 +28,55 @@ class _AddMedicinePage2State extends State<AddMedicinePage2> {
       appBar: AppBar(
         title: Text('Add Repetition Details'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Select Time:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-
-            ElevatedButton(
-              onPressed: () { //maybe change the time picker to better design
-                _showTimePicker();
-              },
-              child: Text('Select Time'),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Select Repetition Days:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-        
-            for (int i = 0; i < 7; i++)
-              CheckboxListTile(
-                title: Text(_getDayName(i)),
-                value: _selectedDays[i],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedDays[i] = value!;
-                  });
-                },
+      body: SingleChildScrollView( // Wrap with SingleChildScrollView
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Select Time:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () async {
-          
-                await _saveDetails();
-        
-                Navigator.pop(context);
-              },
-              child: Text('Save'),
-            ),
-          ],
+               SizedBox(height: 16),
+              Text(
+                ' $_selectedTime',
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(height: 8),
+              ElevatedButton.icon(
+                onPressed: () {
+                  _showTimePicker();
+                },
+                icon: Icon(Icons.access_time),
+                label: Text('Select Time'),
+              ),
+             
+              SizedBox(height: 16),
+              Text(
+                'Select Repetition Days:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              for (int i = 0; i < 7; i++)
+                CheckboxListTile(
+                  title: Text(_getDayName(i)),
+                  value: _selectedDays[i],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedDays[i] = value!;
+                    });
+                  },
+                ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () async {
+                  await _saveDetails();
+                },
+                child: Text('Save'),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -90,42 +96,63 @@ class _AddMedicinePage2State extends State<AddMedicinePage2> {
 
   String _getDayName(int index) {
     switch (index) {
-      case 0:
+      case 6:
         return 'Monday';
-      case 1:
+      case 5:
         return 'Tuesday';
-      case 2:
+      case 4:
         return 'Wednesday';
       case 3:
         return 'Thursday';
-      case 4:
+      case 2:
         return 'Friday';
-      case 5:
+      case 1:
         return 'Saturday';
-      case 6:
+      case 0:
         return 'Sunday';
       default:
         return '';
     }
   }
 
-Future<void> _saveDetails() async {
+  Future<void> _saveDetails() async {
+    bool isAtLeastOneDaySelected = _selectedDays.any((day) => day);
+    if (!isAtLeastOneDaySelected || _selectedTime.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please select at least one repetition day and a time.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
 
-String days = '';
-for (int i = 6; i >= 0; i--) {
-  if (_selectedDays[i]) {
-    days += '1';
-  } else {
-    days += '0';
-  }
-}
-print("days is $days");
+    String days = '';
+    for (int i = 6; i >= 0; i--) {
+      if (_selectedDays[i]) {
+        days += '1';
+      } else {
+        days += '0';
+      }
+    }
+    print("days is $days");
 
-    await SQLHelper.createMed(widget.selectedType,
+    await SQLHelper.createMed(
+      widget.selectedType,
       widget.name,
       widget.reason,
       days,
       _selectedTime,
     );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Medicine added successfully'),
+        backgroundColor: Colors.green,
+      ),
+    );
+
+    // Navigate back to the previous page
+    Navigator.pop(context);
   }
 }
