@@ -49,7 +49,7 @@ class ReplyComments extends StatelessWidget {
             String replyId = replyDocs[index].id;
             String replyText = replyData['commentText'] ?? '';
             String userId = replyData['userId'] ?? '';
-            Timestamp? timestamp = replyData['timestamp']; // Use nullable Timestamp
+            Timestamp? timestamp = replyData['timestamp'];
 
             // Only show delete icon if the reply is by the current user
             bool isCurrentUserReply = userId == currentUserID;
@@ -72,18 +72,18 @@ class ReplyComments extends StatelessWidget {
 
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: AssetImage('assets/$pfp'), // load pfp
+                    backgroundImage: AssetImage('assets/$pfp'), 
                   ),
                   title: Row(
                     children: [
                       Text(
                         username,
-                        style: TextStyle(fontWeight: FontWeight.bold), // Make username bold
+                        style: TextStyle(fontWeight: FontWeight.bold), 
                       ),
-                      SizedBox(width: 8), // Add some spacing between username and time
+                      SizedBox(width: 8),
                       Text(
                         timeAgo,
-                        style: TextStyle(fontSize: 11, color: Color.fromARGB(255, 86, 86, 86)), // Customize time ago text style
+                        style: TextStyle(fontSize: 11, color: Color.fromARGB(255, 86, 86, 86)), 
                       ),
                     ],
                   ),
@@ -94,7 +94,7 @@ class ReplyComments extends StatelessWidget {
                           onPressed: () {
                             _deleteReply(topicId, postId, commentId, replyId);
                           },
-                          color: Colors.red, // Make delete icon red
+                          color: Colors.red, 
                         )
                       : null,
                 );

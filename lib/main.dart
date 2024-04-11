@@ -45,26 +45,26 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      // Check the authentication state
+   
       future: FirebaseAuth.instance.authStateChanges().first,
       builder: (context, AsyncSnapshot<User?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // Show a loading indicator if the future is not resolved yet
+         
           return CircularProgressIndicator();
         } else {
           if (snapshot.hasData) {
-            // User is logged in, navigate to the home page
+
             return MaterialApp(
               navigatorKey: navigatorKey,
               title: 'Pill Pilot ',
               home: HomePage(),
             );
           } else {
-            // User is not logged in, navigate to the login page
+        
             return MaterialApp(
               navigatorKey: navigatorKey,
               title: 'Pill Pilot ',
-              home: LoginPage(), // Replace LoginPage with your actual login page
+              home: LoginPage(), 
             );
           }
         }

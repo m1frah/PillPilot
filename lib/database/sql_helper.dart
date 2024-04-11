@@ -12,7 +12,8 @@ class SQLHelper{
     name TEXT,
     reason TEXT,
     days TEXT DEFAULT 0000000, 
-    time TEXT DEFAULT '00-00'
+    time TEXT DEFAULT '00-00',
+    local TEXT DEFAULT 'True'
   )
 ''');  await database.execute('''
       CREATE TABLE IF NOT EXISTS appointment(
@@ -35,7 +36,7 @@ class SQLHelper{
         
   }
   static Future<sql.Database> db() async{
-    return sql.openDatabase('pillsV2.db', version:1, onCreate:(sql.Database database, int version) async{
+    return sql.openDatabase('pillsV4.db', version:1, onCreate:(sql.Database database, int version) async{
       await createTables(database);
     },);
 
@@ -51,7 +52,20 @@ static Future<int> createMed(String type, String name, String reason, String day
 
   return id;
 }
-  //add appointments
+
+//addfbase meds
+static Future<int> createFBMed(missingMed) async {
+
+  final db = await SQLHelper.db();
+  final data = {'type': missingMed.type, 'name': missingMed.name, 'reason': missingMed.reason, 'days': missingMed.days, 'time': missingMed.time, 'local': 'False'};
+  final id =await db.insert('medicine', data, conflictAlgorithm: sql.ConflictAlgorithm.replace);
+
+  // Call scheduleNotifications to schedule notifications for the new medicine
+  // await LocalNotifications.scheduleNotifications(int.parse(missingMed.id), days, time, name);
+
+  return id;
+}
+  //add appointments  
  static Future<int> createApp(String title, String location, String dateTime) async {
   final db = await SQLHelper.db();
   final data = {'title': title, 'location': location, 'dateTime': dateTime};
@@ -68,13 +82,26 @@ static Future<int> createMed(String type, String name, String reason, String day
   );
 
   return id;
-}
+}//get med by id
+ static Future<Map<String, dynamic>?> getMedById(int id) async {
+    final db = await SQLHelper.db();
+    final result = await db.query('medicine', where: 'id = ?', whereArgs: [id]);
+    if (result.isNotEmpty) {
+      return result.first;
+    } else {
+      return null;
+    }
+  }
 //gets al meds
   static Future<List<Map<String, dynamic>>> getMeds() async{
     final db =await SQLHelper.db();
     return db.query('medicine', orderBy: "id");
 
   }
+  static Future<List<Map<String, dynamic>>> getLocalMeds() async {
+  final db = await SQLHelper.db();
+  return db.query('medicine', where: 'local = ?', whereArgs: ['True'], orderBy: "id");
+}
 //getsall appointments
    static Future<List<Map<String, dynamic>>> getApps() async{
     final db =await SQLHelper.db();
@@ -125,6 +152,16 @@ try{
  debugPrint("something went wrong: $err");
 }
     }
+
+  static Future<void> deleteNonLocalMeds() async {
+  try {
+    final db = await SQLHelper.db();
+    await db.delete('medicine', where: 'local = ?', whereArgs: ['False']);
+  } catch (err) {
+    debugPrint("Something went wrong: $err");
+  }
+}
+
 
     // update appointments 
 static Future<int> updateApp(int id, String title, String location, String dateTime) async{

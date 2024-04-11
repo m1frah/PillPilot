@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pillapp/database/sql_helper.dart';
-import 'addmeds.dart';
-import 'medicinepage.dart';
 
 class AddMedicinePage2 extends StatefulWidget {
   final String selectedType;
@@ -28,7 +26,7 @@ class _AddMedicinePage2State extends State<AddMedicinePage2> {
       appBar: AppBar(
         title: Text('Add Repetition Details'),
       ),
-      body: SingleChildScrollView( // Wrap with SingleChildScrollView
+      body: SingleChildScrollView( 
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -152,7 +150,6 @@ class _AddMedicinePage2State extends State<AddMedicinePage2> {
       ),
     );
 
-    // Navigate back to the previous page
     Navigator.pop(context);
   }
 }

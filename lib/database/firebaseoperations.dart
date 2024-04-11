@@ -1,4 +1,4 @@
-// should move  some firebase operations  
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
@@ -156,9 +156,9 @@ Future<void> createUser(String username, String email, String gender, String pas
         }
       }
     } catch (error) {
-      // Handle errors here
+     
       print('Error updating likes count for post: $error');
-      throw error; // Rethrow the error if necessary
+      throw error; 
     }
   }
 
@@ -205,16 +205,16 @@ Future<void> createUser(String username, String email, String gender, String pas
       throw error;
     }
   }
-Future<User> getUserData() async {
+Future<Users> getUserData() async {
     String userId = FirebaseAuth.instance.currentUser!.uid;
     DocumentSnapshot<Map<String, dynamic>> userSnapshot =
         await _firestore.collection('users').doc(userId).get();
 
-    return User(
+    return Users(
       userId: userId,
       username: userSnapshot.data()!['username'],
       gender: userSnapshot.data()!['gender'],
-      profilePictureUrl: userSnapshot.data()!['pfp'],
+      pfp: userSnapshot.data()!['pfp'],
     );
   }
 
@@ -242,10 +242,72 @@ Future<User> getUserData() async {
     }
   }
   
+
+  //fetch topics
+Future<List<Topic>> fetchTopics() async {
+  List<Topic> topics = [];
+  QuerySnapshot<Map<String, dynamic>> snapshot =
+      await FirebaseFirestore.instance.collection('topics').get();
+
+  snapshot.docs.forEach((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+    var data = doc.data();
+    topics.add(Topic(
+      id: doc.id,
+      name: data['name'],
+      description: data['description'],
+      icon: data['icon'], 
+    ));
+  });
+
+  return topics;
+}
+
+Future<List<Post>> fetchPosts(String topicId) async {
+  List<Post> posts = [];
+  QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+      .collection('topics')
+      .doc(topicId)
+      .collection('posts')
+      .get();
+
+  snapshot.docs.forEach((doc) {
+    var data = doc.data();
+    posts.add(Post(
+      id: doc.id,
+      caption: data['Caption'],
+      imageUrl: data['ImageURL'],
+      topicId: topicId, 
+    ));
+  });
+
+  return posts;
+}
+Future<void> sendReply(String topicId, String postId, String commentId, String replyText) async {
+  try {
+    String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
+    CollectionReference replyCollection = FirebaseFirestore.instance
+        .collection('topics')
+        .doc(topicId)
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .doc(commentId)
+        .collection('replies');
+
+    await replyCollection.add({
+      'userId': currentUserId,
+      'commentText': replyText,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+  } catch (error) {
+    // Handle errors
+    print('Error sending reply: $error');
+  }
 }
 
 
-  
+}
 
 
 

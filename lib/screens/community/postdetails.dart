@@ -17,7 +17,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
   late TextEditingController _commentController;
   String _selectedSortOption = 'Newest';
   bool _updatingLikes = false;
-  FirebaseOperations _firebaseOperations = FirebaseOperations(); // Instance of FirebaseOperations
+  FirebaseOperations _firebaseOperations = FirebaseOperations(); 
 
   @override
   void initState() {
@@ -113,7 +113,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                             builder: (BuildContext context) {
                               return Container(
                                 constraints: BoxConstraints(
-                                  minWidth: double.infinity, // Adjust the minimum width as needed
+                                  minWidth: double.infinity, 
                                 ),
                                 child: RepliesSection(commentId: commentId, topicId: widget.post.topicId, postId: widget.post.id),
                               );

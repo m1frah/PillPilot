@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart' as sql;
 import '../../../database/sql_helper.dart';
 import '../../../model/model.dart';
 
@@ -23,7 +22,7 @@ final List<Map<String, dynamic>> moodList = [
 class _AddJournalPageState extends State<AddJournalPage> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _contentController = TextEditingController();
-  String _selectedMood = ''; // Track the selected mood
+  String _selectedMood = '';
 
   @override
   Widget build(BuildContext context) {
@@ -31,92 +30,93 @@ class _AddJournalPageState extends State<AddJournalPage> {
       appBar: AppBar(
         title: Text('Add Journal'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _titleController,
-              decoration: InputDecoration(
-                labelText: 'Title',
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: _titleController,
+                decoration: InputDecoration(
+                  labelText: 'Title',
+                ),
               ),
-            ),
-            SizedBox(height: 16.0),
-            TextField(
-              controller: _contentController,
-              decoration: InputDecoration(
-                labelText: 'Content',
+              SizedBox(height: 16.0),
+              TextField(
+                controller: _contentController,
+                decoration: InputDecoration(
+                  labelText: 'Content',
+                ),
+                maxLines: null,
               ),
-              maxLines: null,
-            ),
-            SizedBox(height: 16.0),
-            Text('Select Mood:', style: TextStyle(fontSize: 16.0)),
-            SizedBox(height: 8.0),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Wrap(
-                    spacing: 8.0,
-                    runSpacing: 8.0,
-                    alignment: WrapAlignment.center, // Center the items
-                    children: moodList.map((mood) {
-                      return Column(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                _selectedMood = mood['label'];
-                              });
-                            },
-                            child: Container(
-                              width: 50.0,
-                              height: 50.0,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: _selectedMood == mood['label'] ? mood['color'].shade800 : Colors.transparent,
-                                  width: 2.0,
+              SizedBox(height: 16.0),
+              Text('Select Mood:', style: TextStyle(fontSize: 16.0)),
+              SizedBox(height: 8.0),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      alignment: WrapAlignment.center,
+                      children: moodList.map((mood) {
+                        return Column(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _selectedMood = mood['label'];
+                                });
+                              },
+                              child: Container(
+                                width: 50.0,
+                                height: 50.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: _selectedMood == mood['label'] ? mood['color'].shade800 : Colors.transparent,
+                                    width: 2.0,
+                                  ),
+                                  color: mood['color'],
                                 ),
-                                color: mood['color'],
-                              ),
-                              child: Icon(
-                                Icons.circle,
-                                color: _selectedMood == mood['label'] ? mood['color'].shade800 : Colors.white,
-                                size: 30.0,
+                                child: Icon(
+                                  Icons.circle,
+                                  color: _selectedMood == mood['label'] ? mood['color'].shade800 : Colors.white,
+                                  size: 30.0,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 8.0),
-                          Text(
-                            mood['label'],
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: _selectedMood == mood['label'] ? mood['color'].shade800 : Colors.grey,
+                            SizedBox(height: 8.0),
+                            Text(
+                              mood['label'],
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: _selectedMood == mood['label'] ? mood['color'].shade800 : Colors.grey,
+                              ),
                             ),
-                          ),
-                        ],
-                      );
-                    }).toList(),
-                  ),
-                );
-              },
-            ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                saveJournal();
-              },
-              child: Text('Save Journal'),
-            ),
-          ],
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  );
+                },
+              ),
+              SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  saveJournal();
+                },
+                child: Text('Save Journal'),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // Save the journal entry to the database
   void saveJournal() async {
     String title = _titleController.text.trim();
     String content = _contentController.text.trim();
@@ -132,6 +132,6 @@ class _AddJournalPageState extends State<AddJournalPage> {
 
     await SQLHelper.insertJournal(entry);
 
-    Navigator.of(context).pop(); // Close the add journal page
+    Navigator.of(context).pop(); 
   }
 }

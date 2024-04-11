@@ -1,17 +1,17 @@
     import 'package:flutter/material.dart';
-    import 'package:sqflite/sqflite.dart' as sql;
-    import '../../../database/sql_helper.dart'; // Assuming you have defined the SQLHelper class in a separate file
-    import '../../../model/model.dart'; // Import the JournalEntry model
+  
+    import '../../../database/sql_helper.dart';
+    import '../../../model/model.dart'; 
     import 'addjournal.dart';
 
     class EditJournalPage extends StatefulWidget {
 
-      final JournalEntry initialJournalEntry; // Change to initialJournalEntry of type JournalEntry
+      final JournalEntry initialJournalEntry; 
 
       const EditJournalPage({
         Key? key,
   
-        required this.initialJournalEntry, // Change to initialJournalEntry of type JournalEntry
+        required this.initialJournalEntry, 
       }) : super(key: key);
 
       @override
@@ -26,7 +26,7 @@
       @override
       void initState() {
         super.initState();
-        // Initialize controllers with initial values from the passed JournalEntry
+
         _titleController = TextEditingController(text: widget.initialJournalEntry.title);
         _contentController = TextEditingController(text: widget.initialJournalEntry.content);
         _selectedMood = widget.initialJournalEntry.mood;
@@ -63,7 +63,7 @@
                 LayoutBuilder(
                   builder: (context, constraints) {
                     if (constraints.maxWidth < 600) {
-                      // Wrap Row in SingleChildScrollView and Wrap for smaller screens
+                   
                       return SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Wrap(
@@ -111,7 +111,7 @@
                         ),
                       );
                     } else {
-                      // Keep the original Row for larger screens
+              
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: moodList.map((mood) {
@@ -165,8 +165,8 @@
                         _deleteJournal();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red, // Background color
-                        foregroundColor: Colors.white, // Text color
+                        backgroundColor: Colors.red, 
+                        foregroundColor: Colors.white, 
                       ),
                       child: Row(
                         children: [
@@ -193,7 +193,7 @@
       void _updateJournal() async {
         String title = _titleController.text.trim();
         String content = _contentController.text.trim();
-        String createDate = widget.initialJournalEntry.createDate; // Original create date
+        String createDate = widget.initialJournalEntry.createDate; 
     print(" hellooooo    $title $content $createDate");
         JournalEntry updatedEntry = JournalEntry(
           id: widget.initialJournalEntry.id,

@@ -9,8 +9,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'sidebar/editprofile.dart';
 import 'sidebar/friends/friends.dart';
 import 'sidebar/sync.dart';
-import 'test.dart';
 import 'sidebar/Journal/journal.dart';
+import '../database/sql_helper.dart';
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -58,10 +58,17 @@ class _HomePageState extends State<HomePage> {
       _selectedIndex = index;
     });
   }
-
+static Future<void> deleteNonFbMEDS() async {
+  try {
+    await SQLHelper.deleteNonLocalMeds();
+  } catch (err) {
+    debugPrint("Something went wrong: $err");
+  }
+}
   Future<void> _signOut() async {
     try {
       await FirebaseAuth.instance.signOut(); 
+      deleteNonFbMEDS();
   Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => SignUpPage()),
@@ -192,21 +199,7 @@ class _HomePageState extends State<HomePage> {
               );
             },
           ),
-          ListTile(
-            leading: Icon(Icons.notifications),
-            title: Text(
-              'Notification Test',
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TestPage()), 
-              );
-            },
-          ),
+          
           ListTile(
             leading: Icon(Icons.book),
             title: Text(

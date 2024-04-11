@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -137,7 +136,7 @@ class _AddFriendsPageState extends State<AddFriendsPage> {
             ),
             SizedBox(height: 50),Center(
          child: Container(
-  width: screenWidth * 0.8, // Adjust the percentage as per your requirement
+  width: screenWidth * 0.8,
   child: TextField(
     decoration: InputDecoration(
       labelText: 'Enter Friend\'s Friend Code',

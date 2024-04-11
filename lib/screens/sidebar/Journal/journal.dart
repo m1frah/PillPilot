@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart' as sql;
 import '../../../database/sql_helper.dart';
 import 'addjournal.dart';
 import 'jounalitems.dart';

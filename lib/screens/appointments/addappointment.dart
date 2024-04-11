@@ -25,7 +25,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
       );
 
       if (id != -1) {
-        // Appointment added successfully
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Appointment added successfully'),
@@ -40,7 +40,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
           _selectedDateTime = null;
         });
       } else {
-        // Error adding appointment
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to add appointment'),

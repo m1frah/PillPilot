@@ -17,200 +17,199 @@ class _BuildCommentsList extends StatelessWidget {
   const _BuildCommentsList({required this.post, required this.selectedSortOption, required this.onReply});
 
  @override
-  Widget build(BuildContext context) {
-    String sort = selectedSortOption == 'Top' ? 'likesCount' : 'timestamp';
-    String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
-    
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: FirebaseFirestore.instance
-        .collection('topics')
-        .doc(post.topicId)
-        .collection('posts')
-        .doc(post.id)
-        .collection('comments')
-        .orderBy(sort, descending: true)
-        .snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        List<DocumentSnapshot<Map<String, dynamic>>> commentDocs = snapshot.data!.docs;
-        if (commentDocs.isEmpty) {
-          return Center(child: Text('Be the first to share your thoughts!'));
-        }
-        return ListView.builder(
-          physics: NeverScrollableScrollPhysics(), 
-          shrinkWrap: true,
-          itemCount: commentDocs.length,
-          itemBuilder: (context, index) {
-            Map<String, dynamic> commentData = commentDocs[index].data()!;
-            String commentId = commentDocs[index].id;
-            String commentText = commentData['commentText'] ?? '';
-            String userId = commentData['userId'] ?? '';
-            Timestamp timestamp = commentData['timestamp'];
+Widget build(BuildContext context) {
+  String sort = selectedSortOption == 'Top' ? 'likesCount' : 'timestamp';
+  String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-            CollectionReference likesRef = FirebaseFirestore.instance
-              .collection('topics')
-              .doc(post.topicId)
-              .collection('posts')
-              .doc(post.id)
-              .collection('comments')
-              .doc(commentId)
-              .collection('likes');
+  return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+    stream: FirebaseFirestore.instance
+      .collection('topics')
+      .doc(post.topicId)
+      .collection('posts')
+      .doc(post.id)
+      .collection('comments')
+      .orderBy(sort, descending: true)
+      .snapshots(),
+    builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator());
+      }
+      if (snapshot.hasError) {
+        return Center(child: Text('Error: ${snapshot.error}'));
+      }
+      List<DocumentSnapshot<Map<String, dynamic>>> commentDocs = snapshot.data!.docs;
+      if (commentDocs.isEmpty) {
+        return Center(child: Text('Be the first to share your thoughts!'));
+      }
+      return ListView.builder(
+        physics: NeverScrollableScrollPhysics(), 
+        shrinkWrap: true,
+        itemCount: commentDocs.length,
+        itemBuilder: (context, index) {
+          Map<String, dynamic> commentData = commentDocs[index].data()!;
+          String commentId = commentDocs[index].id;
+          String commentText = commentData['commentText'] ?? '';
+          String userId = commentData['userId'] ?? '';
+          Timestamp timestamp = commentData['timestamp'];
 
-            return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-              future: FirebaseFirestore.instance.collection('users').doc(userId).get(),
-              builder: (context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> userSnapshot) {
-                if (userSnapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                }
-                if (userSnapshot.hasError) {
-                  return Text('Error fetching username: ${userSnapshot.error}');
-                }
-                if (!userSnapshot.hasData || userSnapshot.data!.data() == null) {
-                  _firebaseOperations.handleDeletedUserComment(post.topicId, post.id, commentId);
-                  return SizedBox(); 
-                }
-                String username = userSnapshot.data!.data()!['username'] ?? '';
-                String timeAgo = _getTimeAgo(timestamp);
-                String pfp = userSnapshot.data!.data()!['pfp'] ?? '';
+          CollectionReference likesRef = FirebaseFirestore.instance
+            .collection('topics')
+            .doc(post.topicId)
+            .collection('posts')
+            .doc(post.id)
+            .collection('comments')
+            .doc(commentId)
+            .collection('likes');
 
-                return StreamBuilder<QuerySnapshot>(
-                  stream: likesRef.snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    }
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
-                    // counts number of likes by counting docs under like subcollection
-                    int likes = snapshot.data!.docs.length;
+          bool isCurrentUserComment = currentUserId == userId; // Check if current user posted this comment
 
-                    return Container(
-                      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [ SizedBox(height :0),
-                             Center(
-  child: CircleAvatar(
-    radius: 28,
-    foregroundImage: AssetImage('assets/$pfp'), 
-  ),
-),
-                              SizedBox(width: 10),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          username,
-                                          style: TextStyle(fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(width: 5),
-                                        Text(
-                                          "- $timeAgo",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: const Color.fromARGB(255, 86, 86, 86),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(commentText),
-                                  ],
-                                ),
+          return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            future: FirebaseFirestore.instance.collection('users').doc(userId).get(),
+            builder: (context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> userSnapshot) {
+              if (userSnapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
+              if (userSnapshot.hasError) {
+                return Text('Error fetching username: ${userSnapshot.error}');
+              }
+              if (!userSnapshot.hasData || userSnapshot.data!.data() == null) {
+                _firebaseOperations.handleDeletedUserComment(post.topicId, post.id, commentId);
+                return SizedBox(); 
+              }
+              String username = userSnapshot.data!.data()!['username'] ?? '';
+              String timeAgo = _getTimeAgo(timestamp);
+              String pfp = userSnapshot.data!.data()!['pfp'] ?? '';
+
+              return StreamBuilder<QuerySnapshot>(
+                stream: likesRef.snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  // counts number of likes by counting docs under like subcollection
+                  int likes = snapshot.data!.docs.length;
+
+                  return Container(
+                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 0),
+                            Center(
+                              child: CircleAvatar(
+                                radius: 28,
+                                foregroundImage: AssetImage('assets/$pfp'), 
                               ),
-                              Row(
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  IconButton(
-                                    icon: Icon(Icons.favorite),
-                                    color: snapshot.data!.docs.any((likeDoc) => likeDoc.id == currentUserId)
-                                      ? Colors.red
-                                      : null,
-                                    onPressed: () async {
-                                      if (currentUserId == null) {
-                                        // Handle if user deleted 
-                                        return;
-                                      }
-
-                                      // Check if the likes subcollection exists
-                                      final likesSnapshot = await likesRef.get();
-                                      // Get the IDs of users who have liked the comment
-                                      final likedUserIds = likesSnapshot.docs.map((doc) => doc.id).toList();
-                                      // Check if the current user's ID is in the list of likedUserIds
-                                      final isLiked = likedUserIds.contains(currentUserId);
-                                      print(currentUserId);
-                                      if (isLiked) {
-                                        // User has already liked, so remove like
-                                        await likesRef.doc(currentUserId).delete();
-                                        
-                                      } else {
-                                        // User has not liked yet, so add like
-                                        await likesRef.doc(currentUserId).set({'liked': true});
-                                      }
-                                    },
+                                  Row(
+                                    children: [
+                                      Text(
+                                        username,
+                                        style: TextStyle(fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        "- $timeAgo",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: const Color.fromARGB(255, 86, 86, 86),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(width: 5),
-                                  Text('$likes'),
+                                  SizedBox(height: 4),
+                                  Text(commentText),
                                 ],
                               ),
-                            ],
-                          ),
-                          SizedBox(height: 0),
-                          Row(
-                        children: [ 
-  SizedBox(width: 50),
-  TextButton(
-    onPressed: () {
-      
-      onReply(commentId);
+                            ),
+                           
+                            IconButton(
+                              icon: Icon(Icons.favorite),
+                              color: snapshot.data!.docs.any((likeDoc) => likeDoc.id == currentUserId)
+                                ? Colors.red
+                                : null,
+                              onPressed: () async {
+                                if (currentUserId == null) {
+                                  // Handle if user deleted 
+                                  return;
+                                }
+
+                                // Check if the likes subcollection exists
+                                final likesSnapshot = await likesRef.get();
+                                // Get the IDs of users who have liked the comment
+                                final likedUserIds = likesSnapshot.docs.map((doc) => doc.id).toList();
+                                // Check if the current user's ID is in the list of likedUserIds
+                                final isLiked = likedUserIds.contains(currentUserId);
+                                print(currentUserId);
+                                if (isLiked) {
+                                  // User has already liked, so remove like
+                                  await likesRef.doc(currentUserId).delete();
+                                  
+                                } else {
+                                  // User has not liked yet, so add like
+                                  await likesRef.doc(currentUserId).set({'liked': true});
+                                }
+                              },
+                            ),
+                            SizedBox(width: 5),
+                            Text('$likes'),
+                          ],
+                        ),
+                        SizedBox(height: 0),
+                        Row(
+                          children: [ 
+                            SizedBox(width: 50),
+                            TextButton(
+                              onPressed: () {
+                                onReply(commentId);
+                              },
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.zero, 
+                              ),
+                              child: Text(
+                                'Reply',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ),
+                            SizedBox(width: 0),
+                            if (isCurrentUserComment) // Show edit button only if the current user posted this comment
+                              TextButton( 
+                                onPressed: () {
+                                  _showEditPopup(context, commentId, commentText);
+                                },
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                ),
+                                child: Text(
+                                  'Edit',
+                                  style: TextStyle(fontSize: 14), 
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+          );
+        },
+      );
     },
-    style: TextButton.styleFrom(
-      padding: EdgeInsets.zero, 
-    ),
-    child: Text(
-      'Reply',
-      style: TextStyle(fontSize: 14),
-    ),
-  ),
-  SizedBox(width: 0),
-  TextButton( 
-    onPressed: () {
-  _showEditPopup(context, commentId, commentText);
-    },
-    style: TextButton.styleFrom(
-      padding: EdgeInsets.zero,
-    ),
-    child: Text(
-      'Edit',
-      style: TextStyle(fontSize: 14), 
-    ),
-  ),
-  
-],
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
-            );
-          },
-        );
-      },
-    );
-  }
+  );
+}
 
   String _getTimeAgo(Timestamp timestamp) {
     DateTime postDate = timestamp.toDate();
@@ -242,12 +241,12 @@ class _BuildCommentsList extends StatelessWidget {
           title: Text("Edit Comment"),
           content: TextField(
             controller: controller,
-            maxLines: null, // Allow multiple lines for editing
+            maxLines: null,
           ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Close the dialog
+                Navigator.pop(context); 
               },
               child: Text('Cancel'),
             ),
@@ -278,9 +277,9 @@ class _BuildCommentsList extends StatelessWidget {
           .collection('comments')
           .doc(commentId)
           .update({'commentText': newText});
-      Navigator.pop(context); // Close the dialog
+      Navigator.pop(context); 
     } catch (error) {
-      // Handle error
+
       print("Failed to save edited comment: $error");
     }
   }
@@ -295,9 +294,9 @@ class _BuildCommentsList extends StatelessWidget {
           .collection('comments')
           .doc(commentId)
           .delete();
-      Navigator.pop(context); // Close the dialog
+      Navigator.pop(context);
     } catch (error) {
-      // Handle error
+   
       print("Failed to delete comment: $error");
     }
   }

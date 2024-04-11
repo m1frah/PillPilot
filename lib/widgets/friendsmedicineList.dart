@@ -105,7 +105,7 @@ class FirebaseMedicationListWidget extends StatelessWidget {
                 dayAbbreviations[index],
                 style: TextStyle(
                   fontSize: 11,
-                  color: Color.fromARGB(151, 196, 12, 12), // Highlight in red
+                  color: Color.fromARGB(151, 196, 12, 12),
                 ),
               ),
             );
@@ -116,7 +116,7 @@ class FirebaseMedicationListWidget extends StatelessWidget {
                 dayAbbreviations[index],
                 style: TextStyle(
                   fontSize: 10,
-                  color: Colors.grey, // Inactive days in gray
+                  color: Colors.grey, 
                 ),
               ),
             );

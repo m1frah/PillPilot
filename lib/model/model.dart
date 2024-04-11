@@ -1,18 +1,47 @@
 //sjhuld create and use models for signup as well
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-class User {
-  final String userId;
-  final String username;
-  final String gender;
-  final String pfp;
+class Medication {
 
-  User({
+  final String type;
+  final String name;
+  final String reason;
+  final String days;
+  final String time;
+
+
+  Medication({
+   
+    required this.type,
+    required this.name,
+    required this.reason,
+    required this.days,
+    required this.time,
+
+  });
+}
+class Users {
+  final String userId;
+   String username;
+   String gender;
+   String pfp;
+
+  Users({
     required this.userId,
     required this.username,
     required this.gender,
     required this.pfp,
   });
+   void setGender(String newGender) {
+    gender = newGender;
+  }
+  void setUsername(String newUsername) {
+    username = newUsername;
+  }
+
+  void setPfp(String newPfp) {
+    pfp = newPfp;
+  }
 }
 class Comment {
   final String id;

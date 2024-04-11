@@ -73,7 +73,7 @@ class FullComment extends StatelessWidget {
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
-                // Count the number of likes by getting the length of the likes subcollection
+
                 int likesCount = snapshot.data!.docs.length;
 
                 return Container(
@@ -85,8 +85,8 @@ class FullComment extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CircleAvatar(
-                            backgroundImage: AssetImage('assets/$pfp'), // Load profile picture
-                            radius: 24, // Increase the size of the avatar
+                            backgroundImage: AssetImage('assets/$pfp'), 
+                            radius: 24, 
                           ),
                           SizedBox(width: 16),
                           Expanded(
@@ -112,7 +112,7 @@ class FullComment extends StatelessWidget {
                                 SizedBox(height: 8),
                                 Text(
                                   commentText,
-                                  style: TextStyle(fontSize: 16), // Increase font size
+                                  style: TextStyle(fontSize: 16), 
                                 ),
                               ],
                             ),

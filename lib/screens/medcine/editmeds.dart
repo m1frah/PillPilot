@@ -38,7 +38,7 @@ class _EditMedsPageState extends State<EditMedsPage> {
 
   Future<void> _saveChanges() async {
     String days = _selectedDays.map((selected) => selected ? '1' : '0').join('');
-    String time = _timeController.text; // Use the time from the text controller directly
+    String time = _timeController.text; 
 
     await SQLHelper.updateMed(
       widget.medication['id'],

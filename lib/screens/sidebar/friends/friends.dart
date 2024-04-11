@@ -59,7 +59,7 @@ class _FriendsPageState extends State<FriendsPage> {
                                 builder: (context, userSnapshot) {
                                   if (userSnapshot.connectionState == ConnectionState.waiting) {
                                     return CircleAvatar(
-                                      radius: 30, // Increase the size of the CircleAvatar
+                                      radius: 30,
                                     );
                                   }
                                   if (!userSnapshot.hasData || userSnapshot.data!.data() == null) {
@@ -79,7 +79,7 @@ class _FriendsPageState extends State<FriendsPage> {
                                   if (userSnapshot.connectionState == ConnectionState.waiting) {
                                     return Text(
                                       'Loading...',
-                                      style: TextStyle(fontSize: 20), // Increase the font size of the Text widget
+                                      style: TextStyle(fontSize: 20), 
                                     );
                                   }
                                   if (!userSnapshot.hasData || userSnapshot.data!.data() == null) {
@@ -89,7 +89,7 @@ class _FriendsPageState extends State<FriendsPage> {
                                   String friendUsername = userSnapshot.data!.data()!['username'] ?? '';
                                   return Text(
                                     friendUsername,
-                                    style: TextStyle(fontSize: 20), // Increase the font size of the Text widget
+                                    style: TextStyle(fontSize: 20), 
                                   );
                                 },
                               ),
