@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:firebase_auth/firebase_auth.dart'; 
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'screens/Home.dart';
 import 'api/localnotifications.dart';
@@ -45,26 +45,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-   
       future: FirebaseAuth.instance.authStateChanges().first,
       builder: (context, AsyncSnapshot<User?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-         
           return CircularProgressIndicator();
         } else {
           if (snapshot.hasData) {
-
             return MaterialApp(
               navigatorKey: navigatorKey,
               title: 'Pill Pilot ',
               home: HomePage(),
+              debugShowCheckedModeBanner: false,
             );
           } else {
-        
             return MaterialApp(
               navigatorKey: navigatorKey,
               title: 'Pill Pilot ',
-              home: LoginPage(), 
+              home: LoginPage(),
+              debugShowCheckedModeBanner: false,
             );
           }
         }
